@@ -1,0 +1,5 @@
+
+
+java:S1319"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(éÃ‘’8Ÿñì· 2
+_
+java:S6813"BRemove this field injection and use constructor injection instead.(êæÄŞ8¢ñì· 2
