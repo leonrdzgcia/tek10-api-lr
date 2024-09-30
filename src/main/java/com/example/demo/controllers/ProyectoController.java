@@ -19,8 +19,13 @@ public class ProyectoController {
 
     @GetMapping()
     public ArrayList<ProyectoModel> obtenerProyectos(){
-
         return proyectoService.obtenerCotizacionesServ();
+    }
+
+
+    @GetMapping("/numero")
+    public String obtenerProyectosNum(){
+        return proyectoService.numeroProyectos();
     }
 
     @PostMapping()
