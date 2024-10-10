@@ -19,6 +19,11 @@ public class ProyectoService {
         return (ArrayList<ProyectoModel>) proyectoRepository.findAll();
     }
 
+    public ArrayList<ProyectoModel> obtenerBorradorServ(){
+        System.out.println(" LOG obtenerCotizacionesServ");
+        return (ArrayList<ProyectoModel>) proyectoRepository.obtenerProyectosBorrador();
+    }
+
     public String numeroProyectos(){
         System.out.println(" LOG numeroProyectos");
         return  proyectoRepository.numeroProyectos();

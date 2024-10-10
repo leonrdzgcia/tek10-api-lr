@@ -22,6 +22,11 @@ public class ProyectoController {
         return proyectoService.obtenerCotizacionesServ();
     }
 
+    @GetMapping("/borr")
+    public ArrayList<ProyectoModel> obtenerProyectosBorrador(){
+        return proyectoService.obtenerBorradorServ();
+    }
+
 
     @GetMapping("/numero")
     public String obtenerProyectosNum(){

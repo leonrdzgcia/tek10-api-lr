@@ -26,6 +26,7 @@ public class ProyectoModel {
     @Column(name = "fechaalta")
     private LocalDateTime fechaalta;
     private LocalDateTime fechalimite;
+    private LocalDateTime fechadeseada;
     private Long total;
 
     public Long getId() {
@@ -146,6 +147,14 @@ public class ProyectoModel {
 
     public void setFechalimite(LocalDateTime fechalimite) {
         this.fechalimite = fechalimite;
+    }
+
+    public LocalDateTime getFechadeseada() {
+        return fechadeseada;
+    }
+
+    public void setFechadeseada(LocalDateTime fechadeseada) {
+        this.fechadeseada = fechadeseada;
     }
 
     public Long getTotal() {
