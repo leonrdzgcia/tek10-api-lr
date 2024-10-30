@@ -18,7 +18,7 @@ public class EmailService {
         System.out.println(token);
         //String urlConfirmacion = "http://localhost:4200/confirmar-registro?token=" + token;
         //String urlConfirmacion = "http://localhost:4200/auth/detalle?correo=" + para;
-        String urlConfirmacion = "https://dev.tek10.com.mx/auth/detalle?correo=" + para;
+        String urlConfirmacion = "https://dev.tek10.mx/auth/detalle?correo=" + para;
 
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(para);

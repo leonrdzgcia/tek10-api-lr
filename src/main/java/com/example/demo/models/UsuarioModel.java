@@ -16,8 +16,15 @@ public class UsuarioModel {
     private String telefono;
     private String correo;
     private String password;
+    private String confirmarPassword;
+
     private String estatus;
+
     private String perfil;
+    private boolean terminos;
+
+
+
     private LocalDateTime fechaalta;
 
     public Long getId() {
@@ -50,6 +57,12 @@ public class UsuarioModel {
     public void setPassword(String password) {
         this.password = password;
     }
+    public String getConfirmarPassword() {
+        return confirmarPassword;
+    }
+    public void setConfirmarPassword(String confirmarPassword) {
+        this.confirmarPassword = confirmarPassword;
+    }
     public String getEstatus() {
         return estatus;
     }
@@ -61,6 +74,12 @@ public class UsuarioModel {
     }
     public void setPerfil(String perfil) {
         this.perfil = perfil;
+    }
+    public boolean isTerminos() {
+        return terminos;
+    }
+    public void setTerminos(boolean terminos) {
+        this.terminos = terminos;
     }
     public LocalDateTime getFechaalta() {
         return fechaalta;
