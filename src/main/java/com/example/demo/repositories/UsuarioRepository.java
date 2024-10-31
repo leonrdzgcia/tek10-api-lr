@@ -20,13 +20,13 @@ public interface UsuarioRepository extends CrudRepository<UsuarioModel,Long> {
 
     @Modifying
     @Transactional
-    @Query(value ="update u350426971_tek10dev.usuarios set estatus = 'Validado' where correo = ?1 ",
+    @Query(value ="update u350426971_tek10dev.usuarios set estatus = 'VALIDADO' where correo = ?1 ",
             nativeQuery = true)
     int confirmarCorreoUsuario (String correo);
 
     @Modifying
     @Transactional
-    @Query(value ="update u350426971_tek10dev.usuarios set estatus = 'Autorizado' where correo = ?1 ",
+    @Query(value ="update u350426971_tek10dev.usuarios set estatus = 'AUTORIZADO' where correo = ?1 ",
             nativeQuery = true)
     int autorizarCorreoProveedor (String correo);
 

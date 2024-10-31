@@ -7,6 +7,8 @@ import javax.mail.internet.*;
 public class EmailSender {
 
     public static void sendEmail(String to, String subject, String body) {
+
+        System.out.println("--email EmailSender sendEmail ");
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com"); // Cambia esto a tu servidor SMTP
         props.put("mail.smtp.port", "587"); // El puerto SMTP
