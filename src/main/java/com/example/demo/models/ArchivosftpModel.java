@@ -7,9 +7,7 @@ public class ArchivosftpModel {
     public ArchivosftpModel(int id, String nombreArchivo ) {
         this.id= id;
         this.nombreArchivo = nombreArchivo;
-
     }
-
     public int getId() {
         return id;
     }

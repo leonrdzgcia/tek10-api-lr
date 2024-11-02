@@ -51,7 +51,7 @@ public class FileUploadController {
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             //boolean uploaded = ftpClient.storeFile("/domains/asesoriascedemusa.com/public_html/assets/img/" + file.getOriginalFilename(), inputStream);
-            boolean uploaded = ftpClient.storeFile("/domains/asesoriascedemusa.com/public_html/assets/img/vid/"
+            boolean uploaded = ftpClient.storeFile("/public_html/fiscal/"
                     + file.getOriginalFilename(), inputStream);
             if (uploaded) {
                 System.out.println("Archivo subido exitosamente 20");
@@ -77,11 +77,23 @@ public class FileUploadController {
     }
 
     @GetMapping("/archivos")
-    public List<ArchivosftpModel> obtenerListaImagenes(@RequestParam("src") int src) throws IOException {
+    public List<ArchivosftpModel> obtenerListaImagenes() throws IOException {
         try {
-            List<ArchivosftpModel> fileList = ftpService.listFiles(src);
+            List<ArchivosftpModel> fileList = ftpService.listFiles();
             return fileList;
         } finally {
+        }
+    }
+
+    @GetMapping("/download")
+    public ResponseEntity<String> downloadFile(
+            @RequestParam String remoteFilePath,
+            @RequestParam String downloadPath) {
+        boolean success = ftpService.downloadFile(remoteFilePath, downloadPath);
+        if (success) {
+            return ResponseEntity.ok("File downloaded successfully to " + downloadPath);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to download file.");
         }
     }
     @GetMapping("/listFiles")
