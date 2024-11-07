@@ -6,11 +6,13 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTP;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.io.File;
 
 @Service
 public class FtpService {
@@ -25,6 +27,50 @@ public class FtpService {
     /*@Value("${ftp.base.directory}")
     private String ftpBaseDirectory;*/
 
+    public boolean uploadFiles(List<String> filePaths) {
+        System.out.println("-- FtpService uploadFiles");
+        FTPClient ftpClient = new FTPClient();
+        boolean allFilesUploaded = true;
+        try {
+            // Conectar al servidor FTP
+            System.out.println("-- FtpService 1");
+            ftpClient.connect(ftpServer, ftpPort);
+            ftpClient.login(ftpUsername, ftpPassword);
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            System.out.println("-- FtpService 2");
+            // Cambiar al directorio remoto donde se subirán los archivos
+            //ftpClient.changeWorkingDirectory(remoteDirectory);
+            ftpClient.changeWorkingDirectory("/public_html/documentos/");
+            // Subir cada archivo de la lista
+            for (String filePath : filePaths) {
+                System.out.println("-- FtpService 3");
+                File localFile = new File(filePath);
+                try (FileInputStream inputStream = new FileInputStream(localFile)) {
+                    boolean uploaded = ftpClient.storeFile(localFile.getName(), inputStream);
+                    if (!uploaded) {
+                        allFilesUploaded = false;
+                        System.out.println("Failed to upload file: " + localFile.getName());
+                    }
+                }
+            }
+            System.out.println("-- FtpService 4");
+        } catch (IOException e) {
+            e.printStackTrace();
+            allFilesUploaded = false;
+        } finally {
+            // Cerrar la conexión
+            if (ftpClient.isConnected()) {
+                try {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return allFilesUploaded;
+    }
     public List<ArchivosftpModel> listFiles() throws IOException {
         System.out.println("---- FtpService listFiles");
         FTPClient ftpClient = new FTPClient();
@@ -33,7 +79,7 @@ public class FtpService {
             ftpClient.connect(ftpServer, ftpPort);
             ftpClient.login(ftpUsername, ftpPassword);
             ftpClient.enterLocalPassiveMode();
-            FTPFile[] files = new FTPFile[0];files = ftpClient.listFiles("/public_html/fiscal/");
+            FTPFile[] files = new FTPFile[0];files = ftpClient.listFiles("/public_html/documentos/");
             System.out.println("CADENAS BACJ");
             System.out.println(files);
             System.out.println(files.length);
@@ -59,7 +105,6 @@ public class FtpService {
         }
         return fileList;
     }
-
     public boolean downloadFile(String remoteFilePath, String downloadPath) {
         System.out.println("---- FtpService downloadFile");
         System.out.println(remoteFilePath);
@@ -98,4 +143,49 @@ public class FtpService {
         }
         return success;
     }
+    public boolean createDirectory(String rfcRfQ, String usuario ) {
+        System.out.println("-- FtpService createDirectory: " );
+        FTPClient ftpClient = new FTPClient();
+        boolean directoryCreated = false;
+        String remoteDirectoryPath="";
+        try {
+            // Conectar al servidor FTP
+            ftpClient.connect(ftpServer, ftpPort);
+            ftpClient.login(ftpUsername, ftpPassword);
+            ftpClient.enterLocalPassiveMode();
+            if (usuario == "CLIENTE"){
+                remoteDirectoryPath = "/public_html/documentos/proveedores/"+rfcRfQ;
+                directoryCreated = ftpClient.makeDirectory(remoteDirectoryPath);
+
+            }else if (usuario == "PROVEEDOR"){
+                remoteDirectoryPath = "/public_html/documentos/clientes/"+rfcRfQ;
+                directoryCreated = ftpClient.makeDirectory(remoteDirectoryPath);
+            }else if (usuario == "RFQ"){
+                remoteDirectoryPath = "/public_html/proyectos/"+rfcRfQ;
+
+            }
+
+            // Crear la carpeta en el servidor FTP
+            //directoryCreated = ftpClient.makeDirectory(remoteDirectoryPath);
+            if (directoryCreated) {
+                System.out.println("Directory created successfully: " + remoteDirectoryPath);
+            } else {
+                System.out.println("Failed to create directory: " + remoteDirectoryPath);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Cerrar la conexión
+            if (ftpClient.isConnected()) {
+                try {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+        return directoryCreated;
+    }
+
 }

@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -36,6 +33,32 @@ public class FileUploadController {
     @Autowired
     private FtpService ftpService;
 
+    @GetMapping("/crear")
+    public boolean crearCarpeta(
+            @RequestParam("rfcRfQ") String rfcRfQ,
+            @RequestParam("usuario") String usuario) throws IOException {
+        try {
+            //ftpService.createDirectory("/public_html/documentos/proveedores/1/");
+            ftpService.createDirectory(rfcRfQ,usuario);
+            return true;
+        } finally {
+        }
+    }
+
+    @PostMapping("/uploads")
+    public ResponseEntity<String> uploadFiles(@RequestBody List<String> filePaths) {
+        //boolean success = ftpService.uploadFiles(filePaths, remoteDirectory);
+        boolean success = ftpService.uploadFiles(filePaths);
+        if (success) {
+            return ResponseEntity.ok("All files uploaded successfully.");
+        } else {
+            return ResponseEntity.status(500).body("Failed to upload some or all files.");
+        }
+
+
+    }
+
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
@@ -51,7 +74,7 @@ public class FileUploadController {
             ftpClient.enterLocalPassiveMode();
             ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
             //boolean uploaded = ftpClient.storeFile("/domains/asesoriascedemusa.com/public_html/assets/img/" + file.getOriginalFilename(), inputStream);
-            boolean uploaded = ftpClient.storeFile("/public_html/fiscal/"
+            boolean uploaded = ftpClient.storeFile("/public_html/documentos/"
                     + file.getOriginalFilename(), inputStream);
             if (uploaded) {
                 System.out.println("Archivo subido exitosamente 20");
@@ -76,6 +99,7 @@ public class FileUploadController {
         }
     }
 
+    /*
     @GetMapping("/archivos")
     public List<ArchivosftpModel> obtenerListaImagenes() throws IOException {
         try {
@@ -83,7 +107,7 @@ public class FileUploadController {
             return fileList;
         } finally {
         }
-    }
+    }*/
 
     @GetMapping("/download")
     public ResponseEntity<String> downloadFile(

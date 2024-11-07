@@ -36,7 +36,18 @@ public class UsuarioService {
     }
     public int validarCorreoUsuarioServ (String correo){
         System.out.println("Entra service validarCorreoUsuarioServ");
-        System.out.println(usuarioRepository.confirmarCorreoUsuario(correo));
-        return usuarioRepository.confirmarCorreoUsuario(correo);
+        System.out.println(usuarioRepository.validarCorreoUsuario(correo));
+        return usuarioRepository.validarCorreoUsuario(correo);
+    }
+
+    public int autorizarCorreoUsuarioServ (String correo){
+        System.out.println("Entra service validarCorreoUsuarioServ");
+        System.out.println(usuarioRepository.autorizarCorreoProveedor(correo));
+        return usuarioRepository.autorizarCorreoProveedor(correo);
+    }
+
+    public String obtenerNumeroUsuariosSer(){
+        System.out.println(" LOG numeroProyectos");
+        return  usuarioRepository.numeroUsuarios();
     }
 }

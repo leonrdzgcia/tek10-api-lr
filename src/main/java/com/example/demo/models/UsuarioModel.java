@@ -17,16 +17,17 @@ public class UsuarioModel {
     private String correo;
     private String password;
     private String confirmarPassword;
-
     private String estatus;
-
     private String perfil;
     private boolean terminos;
-
-
-
+    private String tekid;
     private LocalDateTime fechaalta;
+    private String direccion;
 
+    private String nombreFiscal;
+    private String rfc;
+    private String codigopostal;
+    private String direccionFiscal;
     public Long getId() {
         return id;
     }
@@ -86,5 +87,41 @@ public class UsuarioModel {
     }
     public void setFechaalta(LocalDateTime fechaalta) {
         this.fechaalta = fechaalta;
+    }
+    public String getTekid() {
+        return tekid;
+    }
+    public void setTekid(String tekid) {
+        this.tekid = tekid;
+    }
+    public String getDireccion() {
+        return direccion;
+    }
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+    public String getNombreFiscal() {
+        return nombreFiscal;
+    }
+    public void setNombreFiscal(String nombreFiscal) {
+        this.nombreFiscal = nombreFiscal;
+    }
+    public String getRfc() {
+        return rfc;
+    }
+    public void setRfc(String rfc) {
+        this.rfc = rfc;
+    }
+    public String getCodigopostal() {
+        return codigopostal;
+    }
+    public void setCodigopostal(String codigopostal) {
+        this.codigopostal = codigopostal;
+    }
+    public String getDireccionFiscal() {
+        return direccionFiscal;
+    }
+    public void setDireccionFiscal(String direccionFiscal) {
+        this.direccionFiscal = direccionFiscal;
     }
 }

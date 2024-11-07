@@ -21,19 +21,32 @@ public class UsuarioController {
         return usuarioService.obtenerUsuariosServ();
     }
 
+    @GetMapping("/totalusuarios")
+    public String obtenerNumeroUsuarios(){
+        return usuarioService.obtenerNumeroUsuariosSer();
+    }
+
     @GetMapping("/correo")
     public ArrayList<UsuarioModel> obtenerProyectosNum(@RequestParam String correo){
         return usuarioService.obtenerCorreoUsuarioServ(correo);
     }
 
-    @GetMapping("/validarcorreo")
+
+
+    @PostMapping()
+    public UsuarioModel guardarCotizacion(@RequestBody UsuarioModel usuario){
+        return this.usuarioService.guardarUsuarioServ(usuario);
+    }
+
+    @GetMapping("/validar")
     public int verificarUsuario(@RequestParam String correo) {
         System.out.println("Entra controller verificarUsuario");
         return usuarioService.validarCorreoUsuarioServ(correo);
     }
 
-    @PostMapping()
-    public UsuarioModel guardarCotizacion(@RequestBody UsuarioModel usuario){
-        return this.usuarioService.guardarUsuarioServ(usuario);
+    @GetMapping("/autorizar")
+    public int autorizarUsuario(@RequestParam String correo) {
+        System.out.println("Entra controller verificarUsuario");
+        return usuarioService.autorizarCorreoUsuarioServ(correo);
     }
 }
