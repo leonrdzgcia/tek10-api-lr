@@ -50,4 +50,16 @@ public class UsuarioService {
         System.out.println(" LOG numeroProyectos");
         return  usuarioRepository.numeroUsuarios();
     }
+
+    public UsuarioModel actualizaruUsuario(Long id, UsuarioModel registro) {
+        UsuarioModel existente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Registro no encontrado"));
+        existente.setCodigopostal(registro.getCodigopostal());
+        existente.setRfc(registro.getRfc());
+        //existente.setCodigopostal(registro.getCodigopostal());
+        //existente.setCampo2(registro.getCampo2());
+        // Actualiza los campos necesarios
+        return usuarioRepository.save(existente);
+    }
+
 }

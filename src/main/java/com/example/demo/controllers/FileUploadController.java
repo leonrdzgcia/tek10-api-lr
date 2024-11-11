@@ -14,6 +14,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,8 @@ public class FileUploadController {
     @Value("${ftp.password}")
     private String ftpPassword;
     private List<ArchivosftpModel> sfiles;
+    private static final String UPLOAD_DIR = "/public_html/documentos/uploads/";
+
 
     @Autowired
     private FtpService ftpService;
@@ -58,6 +63,53 @@ public class FileUploadController {
 
     }
 
+    @PostMapping("/uploadFiles")
+    public ResponseEntity<String> uploadFiles(@RequestParam("files") MultipartFile[] files) {
+        StringBuilder result = new StringBuilder();
+        int contador = 0 ;
+        System.out.println(files);
+        System.out.println(files.length);
+        for (MultipartFile file : files) {
+            System.out.println("Contador - "+contador);
+            FTPClient ftpClient = new FTPClient();
+            System.out.println(ftpServer + ftpPort + ftpUsername + ftpPassword);
+            try (InputStream inputStream = file.getInputStream()) {
+                ftpClient.connect(ftpServer, ftpPort);
+                ftpClient.login(ftpUsername, ftpPassword);
+                ftpClient.enterLocalPassiveMode();
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                boolean uploaded = ftpClient.storeFile("/public_html/documentos/"+ file.getOriginalFilename(), inputStream);
+                contador++;
+                /*if (uploaded) {
+                    System.out.println("Archivo subido exitosamente 20");
+                    return new ResponseEntity<>("Archivo subido exitosamente", HttpStatus.OK);
+                } else {
+                    System.out.println("Error al subir el archivo");
+                    return new ResponseEntity<>("Error al subir el archivo", HttpStatus.INTERNAL_SERVER_ERROR);
+                }*/
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Error al conectar con el servidor FTP");
+                return new ResponseEntity<>("Error al conectar con el servidor FTP", HttpStatus.INTERNAL_SERVER_ERROR);
+            } finally {
+
+                try {
+                    if (ftpClient.isConnected()) {
+                        ftpClient.logout();
+                        ftpClient.disconnect();
+                    }
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+
+        return ResponseEntity.ok(result.toString());
+    }
+
+
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
@@ -65,9 +117,7 @@ public class FileUploadController {
             return new ResponseEntity<>("Archivo no válido", HttpStatus.BAD_REQUEST);
         }
         FTPClient ftpClient = new FTPClient();
-        System.out.println("VALIDACIONES 20");
         System.out.println(ftpServer + ftpPort + ftpUsername + ftpPassword);
-        System.out.println("VALIDACIONES FIN  20");
         try (InputStream inputStream = file.getInputStream()) {
             ftpClient.connect(ftpServer, ftpPort);
             ftpClient.login(ftpUsername, ftpPassword);
@@ -98,17 +148,6 @@ public class FileUploadController {
             }
         }
     }
-
-    /*
-    @GetMapping("/archivos")
-    public List<ArchivosftpModel> obtenerListaImagenes() throws IOException {
-        try {
-            List<ArchivosftpModel> fileList = ftpService.listFiles();
-            return fileList;
-        } finally {
-        }
-    }*/
-
     @GetMapping("/download")
     public ResponseEntity<String> downloadFile(
             @RequestParam String remoteFilePath,
@@ -194,4 +233,13 @@ public class FileUploadController {
         ftpClient.disconnect();
         return deleted;
     }
+
+    /*@GetMapping("/archivos")
+    public List<ArchivosftpModel> obtenerListaImagenes() throws IOException {
+        try {
+            List<ArchivosftpModel> fileList = ftpService.listFiles();
+            return fileList;
+        } finally {
+        }
+    }*/
 }

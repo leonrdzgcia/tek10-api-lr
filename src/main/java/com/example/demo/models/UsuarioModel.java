@@ -13,6 +13,8 @@ public class UsuarioModel {
     @Column(unique = true, nullable = false)
     private Long id;
     private String nombre;
+    private String paterno;
+    private String materno;
     private String telefono;
     private String correo;
     private String password;
@@ -23,7 +25,6 @@ public class UsuarioModel {
     private String tekid;
     private LocalDateTime fechaalta;
     private String direccion;
-
     private String nombreFiscal;
     private String rfc;
     private String codigopostal;
@@ -39,6 +40,18 @@ public class UsuarioModel {
     }
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+    public String getPaterno() {
+        return paterno;
+    }
+    public void setPaterno(String paterno) {
+        this.paterno = paterno;
+    }
+    public String getMaterno() {
+        return materno;
+    }
+    public void setMaterno(String materno) {
+        this.materno = materno;
     }
     public String getTelefono() {
         return telefono;

@@ -6,13 +6,10 @@ import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTP;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import java.io.FileInputStream;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.File;
 
 @Service
 public class FtpService {
@@ -26,6 +23,32 @@ public class FtpService {
     private String ftpPassword;
     /*@Value("${ftp.base.directory}")
     private String ftpBaseDirectory;*/
+
+    public void uploadFileToFTP(String fileName, InputStream inputStream) throws IOException {
+        System.out.println(" -- uploadFileToFTP "+fileName);
+        FTPClient ftpClient = new FTPClient();
+        String cadenafile = "public_html/documentos/"+ fileName;
+        System.out.println(" -- uploadFileToFTP 1");
+        try {
+            System.out.println(" -- uploadFileToFTP 2");
+            ftpClient.connect(ftpServer, ftpPort);
+            ftpClient.login(ftpUsername, ftpPassword);
+            System.out.println(" -- uploadFileToFTP 3");
+            ftpClient.enterLocalPassiveMode();
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            System.out.println(" -- uploadFileToFTP 4");
+            boolean done = ftpClient.storeFile(cadenafile, inputStream);
+            if (!done) {
+                throw new IOException("No se pudo subir el archivo: " + cadenafile);
+            }
+            System.out.println(" -- uploadFileToFTP 5");
+        } finally {
+            inputStream.close();
+            ftpClient.logout();
+            ftpClient.disconnect();
+        }
+    }
+
 
     public boolean uploadFiles(List<String> filePaths) {
         System.out.println("-- FtpService uploadFiles");
